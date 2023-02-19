@@ -46,6 +46,9 @@ class MainActivity : AppCompatActivity() {
         redSeekBar.isEnabled = false
         greenSeekBar.isEnabled = false
         blueSeekBar.isEnabled = false
+        redEditText.isEnabled = false
+        blueEditText.isEnabled = false
+        greenEditText.isEnabled = false
     }
 
     private fun connectViewPointers() {
@@ -85,8 +88,8 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 redSeekBar.isEnabled = true
                 redEditText.isEnabled = true
+                redSeekBarState()
             } else {
-                redSeekBar.progress = 0
                 redSeekBar.isEnabled = false
                 redEditText.isEnabled = false
                 colorRed = 0
@@ -102,8 +105,8 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 greenSeekBar.isEnabled = true
                 greenEditText.isEnabled = true
+                greenSeekBarCallback()
             } else {
-                greenSeekBar.progress = 0
                 greenSeekBar.isEnabled = false
                 greenEditText.isEnabled = false
                 colorGreen = 0
@@ -119,8 +122,8 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 blueSeekBar.isEnabled = true
                 blueEditText.isEnabled = true
+                blueSeekBarCallback()
             } else {
-                blueSeekBar.progress = 0
                 blueSeekBar.isEnabled = false
                 blueEditText.isEnabled = false
                 colorBlue = 0
@@ -140,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                 colorRed = p1
                 colorView.setBackgroundColor(rgb(colorRed,colorGreen,colorBlue))
                 headerText.setTextColor(rgb(colorRed,colorGreen,colorBlue))
+                print(p2)
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -150,6 +154,14 @@ class MainActivity : AppCompatActivity() {
                 endNum = redSeekBar.progress
             }
         })
+    }
+
+    private fun redSeekBarState() {
+        var currentProgress = 0
+        if(redSeekBar.progress > 0) {
+            currentProgress = redSeekBar.progress
+
+        }
     }
 
     private fun greenSeekBarCallback() {

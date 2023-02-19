@@ -29,6 +29,7 @@
             android:id="@+id/color_view"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:layout_marginLeft="20dp"
             android:layout_height="match_parent"
             android:layout_marginBottom="20dp"
             android:background="@color/white"
@@ -81,6 +82,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:textSize="20sp"
+                    android:background="@drawable/edittext_background"
                     tools:ignore="LabelFor" />
             </LinearLayout>
 
@@ -123,6 +125,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:textSize="20sp"
+                    android:background="@drawable/edittext_background"
                     tools:ignore="LabelFor" />
             </LinearLayout>
 
@@ -165,6 +168,7 @@
                     android:inputType="numberDecimal"
                     android:textColor="@color/white"
                     android:textSize="20sp"
+                    android:background="@drawable/edittext_background"
                     tools:ignore="LabelFor" />
             </LinearLayout>
 
