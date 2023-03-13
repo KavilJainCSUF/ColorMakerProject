@@ -54,9 +54,9 @@ class MainActivity : AppCompatActivity() {
         greenEditTextCallback()
         blueEditTextCallback()
         val maxTextLength = 5
-        redEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength))
-        blueEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength))
-        greenEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength))
+        redEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength), CustomRangeInputFilter(0.0, 1.0))
+        blueEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength), CustomRangeInputFilter(0.0, 1.0))
+        greenEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength), CustomRangeInputFilter(0.0, 1.0))
         redSeekBar.isEnabled = false
         greenSeekBar.isEnabled = false
         blueSeekBar.isEnabled = false
@@ -302,4 +302,5 @@ class DecimalDigitsInputFilter:InputFilter {
         }
         return ""
     }
+
 }
