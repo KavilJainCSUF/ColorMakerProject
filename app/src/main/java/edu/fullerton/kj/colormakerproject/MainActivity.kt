@@ -14,8 +14,6 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.widget.addTextChangedListener
-import java.util.regex.Matcher
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -53,10 +51,6 @@ class MainActivity : AppCompatActivity() {
         redEditTextCallback()
         greenEditTextCallback()
         blueEditTextCallback()
-        val maxTextLength = 5
-        redEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength), CustomRangeInputFilter(0.0, 1.0))
-        blueEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength), CustomRangeInputFilter(0.0, 1.0))
-        greenEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength), CustomRangeInputFilter(0.0, 1.0))
         redSeekBar.isEnabled = false
         greenSeekBar.isEnabled = false
         blueSeekBar.isEnabled = false
@@ -103,6 +97,7 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 redSeekBar.isEnabled = true
                 redEditText.isEnabled = true
+                redEditText.setText("0.0")
                 var getRedColorValue = redEditText.text
                 if(getRedColorValue!=null && getRedColorValue.isNotEmpty()){
                     colorRed = (getRedColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
@@ -124,6 +119,7 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 greenSeekBar.isEnabled = true
                 greenEditText.isEnabled = true
+                greenEditText.setText("0.0")
                 var getGreenColorValue = greenEditText.text
                 if(getGreenColorValue!=null && getGreenColorValue.isNotEmpty()){
                     colorGreen = (getGreenColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
@@ -145,6 +141,7 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 blueSeekBar.isEnabled = true
                 blueEditText.isEnabled = true
+                blueEditText.setText("0.0")
                 var getBlueColorValue = blueEditText.text
                 if(getBlueColorValue!=null && getBlueColorValue.isNotEmpty()){
                     colorBlue = (getBlueColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
@@ -228,7 +225,9 @@ class MainActivity : AppCompatActivity() {
     private fun redEditTextCallback() {
         redEditText.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                redEditText.filters = arrayOf(InputFilter.LengthFilter(5), CustomRangeInputFilter(0.0, 1.0))
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {
@@ -248,7 +247,10 @@ class MainActivity : AppCompatActivity() {
     private fun blueEditTextCallback() {
         blueEditText.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                blueEditText.filters = arrayOf(InputFilter.LengthFilter(5), CustomRangeInputFilter(0.0, 1.0))
+
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {
@@ -268,7 +270,9 @@ class MainActivity : AppCompatActivity() {
     private fun greenEditTextCallback() {
         greenEditText.addTextChangedListener(object : TextWatcher {
 
-            override fun afterTextChanged(s: Editable) {}
+            override fun afterTextChanged(s: Editable) {
+                greenEditText.filters = arrayOf(InputFilter.LengthFilter(5), CustomRangeInputFilter(0.0, 1.0))
+            }
 
             override fun beforeTextChanged(s: CharSequence, start: Int,
                                            count: Int, after: Int) {
@@ -286,21 +290,22 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class DecimalDigitsInputFilter:InputFilter {
-    override fun filter(
-        p0: CharSequence?,
-        p1: Int,
-        p2: Int,
-        p3: Spanned?,
-        p4: Int,
-        p5: Int
-    ): CharSequence {
-        var pattern = Regex("(0|1)?\\.\\d+")
-        if (p0 != null) {
-            if(pattern.matches(p0))
-                return p0
-        }
-        return ""
-    }
+//class DecimalDigitsInputFilter:InputFilter {
+//    override fun filter(
+//        p0: CharSequence?,
+//        p1: Int,
+//        p2: Int,
+//        p3: Spanned?,
+//        p4: Int,
+//        p5: Int
+//    ): CharSequence {
+//        Log.d("Pattern", p0?.toString() ?: "")
+//        var pattern = Regex("(0\\.\\d+)|(1\\.0)")
+//        if (p0 != null) {
+//            if(pattern.matches(p0))
+//                return p0
+//        }
+//        return ""
+//    }
 
 }
