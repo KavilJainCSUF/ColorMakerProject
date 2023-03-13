@@ -95,7 +95,8 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 redSeekBar.isEnabled = true
                 redEditText.isEnabled = true
-                redEditText.setText("0.0")
+                if(redSeekBar.progress == 0)
+                    redEditText.setText("0.0")
                 var getRedColorValue = redEditText.text
                 if(getRedColorValue!=null && getRedColorValue.isNotEmpty()){
                     colorRed = (getRedColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
@@ -117,7 +118,8 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 greenSeekBar.isEnabled = true
                 greenEditText.isEnabled = true
-                greenEditText.setText("0.0")
+                if(greenSeekBar.progress == 0)
+                    greenEditText.setText("0.0")
                 var getGreenColorValue = greenEditText.text
                 if(getGreenColorValue!=null && getGreenColorValue.isNotEmpty()){
                     colorGreen = (getGreenColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
@@ -139,7 +141,8 @@ class MainActivity : AppCompatActivity() {
             if(isChecked) {
                 blueSeekBar.isEnabled = true
                 blueEditText.isEnabled = true
-                blueEditText.setText("0.0")
+                if(blueSeekBar.progress == 0)
+                    blueEditText.setText("0.0")
                 var getBlueColorValue = blueEditText.text
                 if(getBlueColorValue!=null && getBlueColorValue.isNotEmpty()){
                     colorBlue = (getBlueColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
