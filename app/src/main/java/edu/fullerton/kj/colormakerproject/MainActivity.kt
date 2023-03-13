@@ -4,6 +4,7 @@ import android.graphics.Color.rgb
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
+import android.text.Spanned
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -14,6 +15,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.addTextChangedListener
+import java.util.regex.Matcher
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
@@ -52,9 +54,9 @@ class MainActivity : AppCompatActivity() {
         greenEditTextCallback()
         blueEditTextCallback()
         val maxTextLength = 5
-        redEditText.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxTextLength))
-        blueEditText.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxTextLength))
-        greenEditText.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(maxTextLength))
+        redEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength))
+        blueEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength))
+        greenEditText.filters = arrayOf(InputFilter.LengthFilter(maxTextLength))
         redSeekBar.isEnabled = false
         greenSeekBar.isEnabled = false
         blueSeekBar.isEnabled = false
@@ -224,14 +226,80 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun redEditTextCallback() {
+        redEditText.addTextChangedListener(object : TextWatcher {
 
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if(s!=null && s.isNotEmpty()){
+                    redSeekBar.progress = (s.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
+                }
+                colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
+                headerText.setTextColor(rgb(colorRed,colorGreen,colorBlue))
+            }
+        })
     }
 
     private fun blueEditTextCallback() {
+        blueEditText.addTextChangedListener(object : TextWatcher {
 
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if(s!=null && s.isNotEmpty()){
+                    blueSeekBar.progress = (s.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
+                }
+                colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
+                headerText.setTextColor(rgb(colorRed,colorGreen,colorBlue))
+            }
+        })
     }
 
     private fun greenEditTextCallback() {
+        greenEditText.addTextChangedListener(object : TextWatcher {
 
+            override fun afterTextChanged(s: Editable) {}
+
+            override fun beforeTextChanged(s: CharSequence, start: Int,
+                                           count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int,
+                                       before: Int, count: Int) {
+                if(s!=null && s.isNotEmpty()){
+                    greenSeekBar.progress = (s.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
+                }
+                colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
+                headerText.setTextColor(rgb(colorRed,colorGreen,colorBlue))
+            }
+        })
+    }
+}
+
+class DecimalDigitsInputFilter:InputFilter {
+    override fun filter(
+        p0: CharSequence?,
+        p1: Int,
+        p2: Int,
+        p3: Spanned?,
+        p4: Int,
+        p5: Int
+    ): CharSequence {
+        var pattern = Regex("(0|1)?\\.\\d+")
+        if (p0 != null) {
+            if(pattern.matches(p0))
+                return p0
+        }
+        return ""
     }
 }
