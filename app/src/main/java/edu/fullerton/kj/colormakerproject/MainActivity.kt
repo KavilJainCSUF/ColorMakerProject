@@ -307,5 +307,3 @@ class MainActivity : AppCompatActivity() {
 //        }
 //        return ""
 //    }
-
-}
