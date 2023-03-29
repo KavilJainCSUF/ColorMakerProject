@@ -5,14 +5,20 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import kotlin.math.roundToInt
+
+private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var resetButton: Button
@@ -27,13 +33,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var greenEditText: EditText
     private lateinit var blueEditText: EditText
     private lateinit var headerText: TextView
-    var rescaledValue = 0.00392156862
-    var newValue: Double = 0.00
-    var startNum = 0
-    var endNum = 0
-    var colorRed = 0
-    var colorBlue = 0
-    var colorGreen = 0
+    private var rescaledValue = 0.00392156862
+    private var newValue: Double = 0.00
+    private var startNum = 0
+    private var endNum = 0
+    private var colorRed = 0
+    private var colorBlue = 0
+    private var colorGreen = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +62,32 @@ class MainActivity : AppCompatActivity() {
         redEditText.isEnabled = false
         blueEditText.isEnabled = false
         greenEditText.isEnabled = false
+        Log.d(TAG, "onCreate(Bundle?) called")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart() called")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "onResume() called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause() called")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop() called")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy() called")
     }
 
     private fun connectViewPointers() {
@@ -86,7 +119,14 @@ class MainActivity : AppCompatActivity() {
             redEditText.setText("")
             greenEditText.setText("")
             blueEditText.setText("")
+            redSeekBar.isEnabled = false
+            redEditText.isEnabled = false
+            greenSeekBar.isEnabled = false
+            greenEditText.isEnabled = false
+            blueSeekBar.isEnabled = false
+            blueEditText.isEnabled = false
             colorView.background = resources.getDrawable(R.drawable.color_background)
+            headerText.setTextColor(rgb(1,1,1))
         }
     }
 
@@ -97,19 +137,16 @@ class MainActivity : AppCompatActivity() {
                 redEditText.isEnabled = true
                 if(redSeekBar.progress == 0)
                     redEditText.setText("0.0")
-                var getRedColorValue = redEditText.text
-                if(getRedColorValue!=null && getRedColorValue.isNotEmpty()){
-                    colorRed = (getRedColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
-                }
-                colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
-                headerText.setTextColor(rgb(this.colorRed,this.colorGreen,this.colorBlue))
+                val getRedColorValue = redEditText.text
+                if(getRedColorValue!=null && getRedColorValue.isNotEmpty())
+                    colorRed = convertEditTextColorValue(getRedColorValue)
             } else {
                 redSeekBar.isEnabled = false
                 redEditText.isEnabled = false
-                this.colorRed = 0
-                colorView.setBackgroundColor(rgb(colorRed,this.colorGreen,this.colorBlue))
-                headerText.setTextColor(rgb(colorRed,this.colorGreen,this.colorBlue))
+                colorRed = 0
             }
+            colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
+            headerText.setTextColor(rgb(colorRed, colorGreen, colorBlue))
         }
     }
 
@@ -120,19 +157,16 @@ class MainActivity : AppCompatActivity() {
                 greenEditText.isEnabled = true
                 if(greenSeekBar.progress == 0)
                     greenEditText.setText("0.0")
-                var getGreenColorValue = greenEditText.text
-                if(getGreenColorValue!=null && getGreenColorValue.isNotEmpty()){
-                    colorGreen = (getGreenColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
-                }
-                colorView.setBackgroundColor(rgb(this.colorRed, this.colorGreen, this.colorBlue))
-                headerText.setTextColor(rgb(this.colorRed,this.colorGreen,this.colorBlue))
+                val getGreenColorValue = greenEditText.text
+                if(getGreenColorValue!=null && getGreenColorValue.isNotEmpty())
+                    colorGreen = convertEditTextColorValue(getGreenColorValue)
             } else {
                 greenSeekBar.isEnabled = false
                 greenEditText.isEnabled = false
-                this.colorGreen = 0
-                colorView.setBackgroundColor(rgb(this.colorRed,colorGreen,this.colorBlue))
-                headerText.setTextColor(rgb(this.colorRed,colorGreen,this.colorBlue))
+                colorGreen = 0
             }
+            colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
+            headerText.setTextColor(rgb(colorRed, colorGreen, colorBlue))
         }
     }
 
@@ -143,19 +177,16 @@ class MainActivity : AppCompatActivity() {
                 blueEditText.isEnabled = true
                 if(blueSeekBar.progress == 0)
                     blueEditText.setText("0.0")
-                var getBlueColorValue = blueEditText.text
-                if(getBlueColorValue!=null && getBlueColorValue.isNotEmpty()){
-                    colorBlue = (getBlueColorValue.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
-                }
-                colorView.setBackgroundColor(rgb(this.colorRed,this.colorGreen,this.colorBlue))
-                headerText.setTextColor(rgb(this.colorRed,this.colorGreen,this.colorBlue))
+                val getBlueColorValue = blueEditText.text
+                if(getBlueColorValue!=null && getBlueColorValue.isNotEmpty())
+                    colorBlue = convertEditTextColorValue(getBlueColorValue)
             } else {
                 blueSeekBar.isEnabled = false
                 blueEditText.isEnabled = false
-                this.colorBlue = 0
-                colorView.setBackgroundColor(rgb(this.colorRed,this.colorGreen,colorBlue))
-                headerText.setTextColor(rgb(this.colorRed,this.colorGreen,colorBlue))
+                colorBlue = 0
             }
+            colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
+            headerText.setTextColor(rgb(colorRed, colorGreen, colorBlue))
         }
     }
 
@@ -168,7 +199,6 @@ class MainActivity : AppCompatActivity() {
                 colorRed = p1
                 colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
                 headerText.setTextColor(rgb(colorRed, colorGreen, colorBlue))
-                print(p2)
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
@@ -185,7 +215,7 @@ class MainActivity : AppCompatActivity() {
         greenSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 newValue = p1*rescaledValue
-                val roundOffValue = (newValue * 100.0).roundToInt() / 100.0
+                val roundOffValue = (newValue * 1000.0).roundToInt() / 1000.0
                 greenEditText.setText(roundOffValue.toString())
                 colorGreen = p1
                 colorView.setBackgroundColor(rgb(colorRed,colorGreen,colorBlue))
@@ -206,7 +236,7 @@ class MainActivity : AppCompatActivity() {
         blueSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 newValue = p1*rescaledValue
-                val roundOffValue = (newValue * 100.0).roundToInt() / 100.0
+                val roundOffValue = (newValue * 1000.0).roundToInt() / 1000.0
                 blueEditText.setText(roundOffValue.toString())
                 colorBlue = p1
                 colorView.setBackgroundColor(rgb(colorRed,colorGreen,colorBlue))
@@ -236,8 +266,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {
-                if(s!=null && s.isNotEmpty()){
-                    redSeekBar.progress = (s.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
+                if(s.isNotEmpty()){
+                    redSeekBar.progress = convertEditTextColorValue(s)
                 }
                 colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
                 headerText.setTextColor(rgb(colorRed,colorGreen,colorBlue))
@@ -259,8 +289,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {
-                if(s!=null && s.isNotEmpty()){
-                    blueSeekBar.progress = (s.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
+                if(s.isNotEmpty()){
+                    blueSeekBar.progress = convertEditTextColorValue(s)
                 }
                 colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
                 headerText.setTextColor(rgb(colorRed,colorGreen,colorBlue))
@@ -281,30 +311,25 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence, start: Int,
                                        before: Int, count: Int) {
-                if(s!=null && s.isNotEmpty()){
-                    greenSeekBar.progress = (s.toString()?.toDouble()?.times(255))?.roundToInt()?: 0
+                if(s.isNotEmpty()){
+                    greenSeekBar.progress = convertEditTextColorValue(s)
                 }
                 colorView.setBackgroundColor(rgb(colorRed, colorGreen, colorBlue))
                 headerText.setTextColor(rgb(colorRed,colorGreen,colorBlue))
             }
         })
     }
-}
 
-//class DecimalDigitsInputFilter:InputFilter {
-//    override fun filter(
-//        p0: CharSequence?,
-//        p1: Int,
-//        p2: Int,
-//        p3: Spanned?,
-//        p4: Int,
-//        p5: Int
-//    ): CharSequence {
-//        Log.d("Pattern", p0?.toString() ?: "")
-//        var pattern = Regex("(0\\.\\d+)|(1\\.0)")
-//        if (p0 != null) {
-//            if(pattern.matches(p0))
-//                return p0
-//        }
-//        return ""
-//    }
+    private fun convertEditTextColorValue(value: Any) : Int {
+            return value.toString().toDouble().times(255).roundToInt()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d(TAG, "The counter value is saved")
+    }
+
+    private val viewModel: MyColorViewModel by lazy {
+        ViewModelProvider(this)[MyColorViewModel::class.java]
+    }
+}
